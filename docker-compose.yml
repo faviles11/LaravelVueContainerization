@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8.0.33
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "123"
+      MYSQL_DATABASE: GestionEventos
+    ports:
+      - "XX:XX"
+    volumes:
+      - ./GestionEventos_BackEnd/MySql/ScriptDB.sql:/docker-entrypoint-initdb.d/ScriptDB.sql
+  
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "XX:XX"
+    volumes:
+      - ./GestionEventos_BackEnd:/var/www
+      - ./nginx.conf.d:/etc/nginx/nginx.conf.d
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./GestionEventos_BackEnd
+      dockerfile: Dockerfile.be
+    ports:
+      - "XX:XX"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./GestionEventos_FrontEnd
+      dockerfile: Dockerfile.fe
+    ports:
+      - "XX:XX"
+    depends_on:
+      - backend
